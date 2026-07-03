@@ -24,7 +24,6 @@
 | 動作確認IDE | STM32CubeIDE 2.1.1 |
 | 使用言語 | C, Ruby |
 | Ruby実行環境 | mruby/c |
-| GPIO制御 | STM32 HAL |
 | 外部ハードウェア | なし |
 
 ## ドキュメント
