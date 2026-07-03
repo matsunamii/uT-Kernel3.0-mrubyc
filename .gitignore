@@ -1,0 +1,26 @@
+# Build output
+Debug/
+Release/
+
+# Object and dependency files
+*.o
+*.d
+*.su
+*.cyclo
+*.map
+*.list
+
+# Firmware output
+*.elf
+*.bin
+*.hex
+*.srec
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Backup files
+*~
+*.bak
+.metadata/
