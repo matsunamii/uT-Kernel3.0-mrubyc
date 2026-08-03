@@ -5,8 +5,8 @@
  *      Author: tomoy
  */
 
-#ifndef MRUBYC_EXT_STM32H5_GPIO_H_
-#define MRUBYC_EXT_STM32H5_GPIO_H_
+#ifndef MRUBY_LIBRAY_STM32H5_GPIO_H_
+#define MRUBY_LIBRAY_STM32H5_GPIO_H_
 
 
 //@cond
@@ -39,4 +39,4 @@ int gpio_setmode( const PIN_HANDLE *pin, unsigned int mode );
 int gpio_setmode_pwm( const PIN_HANDLE *pin, int ch );
 void mrbc_init_class_gpio( void );
 
-#endif /* MRUBYC_EXT_STM32H5_GPIO_H_ */
+#endif /* MRUBY_LIBRAY_STM32H5_GPIO_H_ */

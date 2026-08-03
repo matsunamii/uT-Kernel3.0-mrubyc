@@ -12,8 +12,27 @@
 TARGETS = $(MRBLIB_C) $(VERSIONFILE)
 MRBLIB_C = ../src/mrblib.c
 VERSIONFILE =  ../src/VERSION
-SRCS = enum.rb array.rb global.rb hash.rb numeric.rb object.rb range.rb string.rb
-MRBC ?= mrbc
+# 標準ライブラリ
+STANDARD_SRCS = \
+	enum.rb \
+	array.rb \
+	global.rb \
+	hash.rb \
+	numeric.rb \
+	object.rb \
+	range.rb \
+	string.rb
+
+# 独自ライブラリ用ディレクトリ
+CUSTOM_LIB_DIR = ../../mruby_library/mrb_lib
+
+# 独自ライブラリ用ディレクトリ内の.rbをすべて取得
+CUSTOM_SRCS = $(wildcard $(CUSTOM_LIB_DIR)/*.rb)
+
+
+SRCS = $(STANDARD_SRCS) $(CUSTOM_SRCS)
+
+MRBC ?= ../../bin/mrbc
 
 
 #

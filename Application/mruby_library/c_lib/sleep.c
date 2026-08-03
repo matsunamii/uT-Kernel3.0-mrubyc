@@ -1,7 +1,7 @@
 #include <tk/tkernel.h>
 #include "mrubyc.h"
 
-void c_sleep_ms(struct VM *vm, mrbc_value v[], int argc)
+void c_delay_ms(struct VM *vm, mrbc_value v[], int argc)
 {
   if (argc != 1) return;
 

@@ -2,6 +2,7 @@
 #include <tm/tmonitor.h>
 #include "mrubyc.h"
 #include "main.h"
+
 #include "stm32h5_gpio.h"
 
 static uint16_t const TBL_NUM_TO_STM32PIN[/* num */] = {
@@ -15,22 +16,22 @@ static GPIO_TypeDef * const TBL_PORT_TO_STM32GPIO[/* port */] = {
 };
 
 static uint8_t const TBL_ARDUINO_DIGITAL_PIN_TO_PIN[/* num */] = {
-  0x03,  // D0 => PA3
-  0x02,  // D1 => PA2
+  0x1F,  // D0 => PB15
+  0x1E,  // D1 => PB14
   0x0A,  // D2 => PA10
   0x13,  // D3 => PB3
   0x15,  // D4 => PB5
   0x14,  // D5 => PB4
   0x1A,  // D6 => PB10
   0x08,  // D7 => PA8
-  0x09,  // D8 => PA9
-  0x27,  // D9 => PC7
-  0x16,  // D10 => PB6
+  0x27,  // D8 => PC7
+  0x26,  // D9 => PC6
+  0x29,  // D10 => PC9
   0x07,  // D11 => PA7
   0x06,  // D12 => PA6
   0x05,  // D13 => PA5
-  0x19,  // D14 => PB9
-  0x18,  // D15 => PB8
+  0x17,  // D14 => PB7
+  0x16,  // D15 => PB6
 };
 
 
@@ -82,6 +83,9 @@ int gpio_set_pin_handle( PIN_HANDLE *pin, const mrbc_value *val )
 */
 int gpio_setmode( const PIN_HANDLE *pin, unsigned int mode )
 {
+  __HAL_RCC_GPIOA_CLK_ENABLE();
+  __HAL_RCC_GPIOB_CLK_ENABLE();
+  __HAL_RCC_GPIOC_CLK_ENABLE();
   GPIO_InitTypeDef GPIO_InitStruct = {0};
   GPIO_InitStruct.Pin = TBL_NUM_TO_STM32PIN[pin->num];
 

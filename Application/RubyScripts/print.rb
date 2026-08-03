@@ -1,5 +1,3 @@
-$sleep_time = 1000
-
 led = GPIO.new("PA5", GPIO::OUT)
 
 while true
@@ -11,5 +9,5 @@ while true
     print "LED: OFF\n"
   end
 
-  sleep_ms $sleep_time
+  delay_ms $sleep_time
 end

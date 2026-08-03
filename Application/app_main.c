@@ -1,10 +1,14 @@
 #include <tk/tkernel.h>
 #include <tm/tmonitor.h>
-#include "mrubyc_ext.h"
 #include "mrubyc.h"
+
+#include "mruby_library/c_lib/mrubyc_ext.h"
 
 extern const uint8_t led[];
 extern const uint8_t print[];
+extern const uint8_t clock[];
+extern const uint8_t sevenseg_led[];
+extern const uint8_t stop_watch[];
 
 /* Task Information */
 typedef struct {
@@ -30,7 +34,7 @@ LOCAL void alarm_handler(void *exinf);
 /* Ruby Task Table */
 mruby_task_info_t mruby_tasks[] = {
   {
-    .script = led,
+    .script = sevenseg_led,
     .vm = NULL,
     .task_id = 0,
     .alarm_id = 0,
@@ -49,27 +53,26 @@ mruby_task_info_t mruby_tasks[] = {
       .exinf  = NULL,
     }
   },
-
   {
-    .script = print,
-    .vm = NULL,
-    .task_id = 0,
-    .alarm_id = 0,
-    .timeslice = 100,
+      .script = stop_watch,
+      .vm = NULL,
+      .task_id = 0,
+      .alarm_id = 0,
+      .timeslice = 100,
 
-    .ctsk = {
-      .itskpri = 10,
-      .stksz   = 1024,
-      .task    = mruby_task_entry,
-      .tskatr  = TA_HLNG | TA_RNG3,
-    },
+      .ctsk = {
+        .itskpri = 10,
+        .stksz   = 1024,
+        .task    = mruby_task_entry,
+        .tskatr  = TA_HLNG | TA_RNG3,
+      },
 
-    .calm = {
-      .almatr = TA_HLNG,
-      .almhdr = alarm_handler,
-      .exinf  = NULL,
+      .calm = {
+        .almatr = TA_HLNG,
+        .almhdr = alarm_handler,
+        .exinf  = NULL,
+      }
     }
-  }
 };
 
 #define NUM_MRUBY_TASKS \
@@ -91,11 +94,19 @@ LOCAL void mruby_task_common(mruby_task_info_t *info)
   while (1) {
     info->vm->flag_preemption = 0;
 
-    tk_sta_alm(info->alarm_id, info->timeslice);
+    ER ercd = tk_sta_alm(info->alarm_id, info->timeslice);
+    if (ercd < E_OK) {
+      tm_putstring((UB*)"tk_sta_alm failed\n");
+    }
 
     int ret = mrbc_vm_run(info->vm);
 
     tk_stp_alm(info->alarm_id);
+
+    if (ret != 0) {
+      tm_putstring((UB*)"mrbc_vm_run stopped\n");
+      mrbc_print_vm_exception(info->vm);
+    }
 
     if (ret == 1) {
       mrbc_vm_end(info->vm);
@@ -133,9 +144,10 @@ EXPORT INT usermain(void)
   mrbc_init_class();
 
   mrbc_init_class_gpio();
+  mrbc_init_class_time();
 
   mrbc_define_method(0, MRBC_CLASS(Object), "print", c_print);
-  mrbc_define_method(0, MRBC_CLASS(Object), "sleep_ms", c_sleep_ms);
+  mrbc_define_method(0, MRBC_CLASS(Object), "delay_ms", c_delay_ms);
 
   for (int i = 0; i < NUM_MRUBY_TASKS; i++) {
     mruby_tasks[i].vm = mrbc_vm_open(NULL);
