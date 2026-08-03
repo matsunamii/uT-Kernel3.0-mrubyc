@@ -3,16 +3,14 @@
 ## 1. 概要
 本書では、本プロジェクトを STM32CubeIDE にインポートし、NUCLEO-H533RE 上で実行するまでの手順を説明します。
 
-本プロジェクトには、動作確認用の Ruby プログラムとして led.rb と print.rb が同梱されています。
+本プロジェクトには、動作確認用のサンプルプログラムおよびデモアプリケーションとして、以下のRubyプログラムを用意しています。
 
 Application/RubyScripts/
+├── clock.rb
+├── sevenseg_led.rb
+├── stop_watch.rb
 ├── led.rb
 └── print.rb
-
-STM32CubeIDE でプロジェクトをビルドし、NUCLEO-H533RE に書き込んで実行すると、以下の2つの Ruby プログラムがRTOSのタスクとして並列実行されます。
-
-led.rb	PA5 に接続されたボード上 LED を周期的に点滅させる
-print.rb	PA5 の状態を読み取り、LED の ON/OFF 状態をシリアル出力に表示する
 
 ## 2. 必要なもの
 
@@ -22,7 +20,7 @@ print.rb	PA5 の状態を読み取り、LED の ON/OFF 状態をシリアル出�
 | IDE | STM32CubeIDE |
 | RTOS | μT-Kernel 3.0 BSP2 |
 | ターミナルソフト | Tera Term など |
-| 外部ハードウェア | なし |
+| 外部ハードウェア | 7セグメントLED |
 
 ## 3. ダウンロードと展開
 
@@ -76,19 +74,48 @@ Tera Term などで NUCLEO-H533RE の仮想 COM ポートを開きます。
 | ストップビット | 1 bit |
 | フロー制御 | none |
 
-表示例：
+## 8. サンプルプログラム
+本プロジェクトが正常に動作することを確認するため、`led.rb`と`print.rb`を用意しています。
 
-```text
-LED: ON
-LED: OFF
-LED: ON
-LED: OFF
-```
+初期状態では、この2つのRubyプログラムがRTOSタスクとして実行されます。
 
-## 8. 動作確認
+- `led.rb`：ボード上LEDを一定周期で点滅させます。
+- `print.rb`：LEDの状態をシリアルポートへ出力します。
 
-以下を確認してください。
+プロジェクトをそのままSTM32CubeIDEへインポートしてビルド・実行することで、これらの動作を確認できます。
 
-1. ボード上 LED が点滅する
-2. シリアル出力に `LED: ON` と `LED: OFF` が表示される
-3. LED の点灯状態とシリアル出力の内容が対応している
+## 9. デモ
+
+本プロジェクトには、以下のデモアプリケーションを用意しています。
+
+### デジタル時計
+現在時刻をRubyプログラムから設定してそこからの時刻を7セグメントLEDへ表示します。
+以下のファイルを次のように変更してビルド・実行してください。
+/Application/app_main.c
+mruby_task_info_t mruby_tasks[] = {
+  {
+    .script = sevenseg_led,
+    ・・・
+  },
+  {
+    .script = clock,
+    ・・・
+    }
+};
+
+### ストップウォッチ
+ボタン操作により開始・停止・リセットを行います。
+以下のファイルを次のように変更してビルド・実行してください。
+/Application/app_main.c
+mruby_task_info_t mruby_tasks[] = {
+  {
+    .script = sevenseg_led,
+    ・・・
+  },
+  {
+    .script = stop_watch,
+    ・・・
+  }
+};
+
+これらのデモを通して、Rubyによる簡潔な記述で、μT-Kernel 3.0のタスク管理や時間管理を活用した組込みアプリケーションを開発できることを確認できます。

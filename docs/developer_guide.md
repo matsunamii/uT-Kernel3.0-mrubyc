@@ -22,8 +22,9 @@
 |---|---|
 | `Application/app_main.c` | mruby/c VM の生成、Ruby タスクの起動、RTOSタスク管理 |
 | `Application/RubyScripts/` | Ruby スクリプトを配置する場所 |
-| `Application/mrubyc_ext/` | Ruby から呼び出す C 拡張メソッドやクラスを実装する場所 |
-
+| `Application/RubyScripts/generated/` | Rubyスクリプトから生成されたバイトコードを配置する場所 |
+| `Application/mruby_library/c_lib/` | Ruby から呼び出す C 拡張メソッドやクラスを実装する場所 |
+| `Application/mruby_library/mrb_lib/` | Ruby側で共通利用するクラスやライブラリを配置する場所 |
 ---
 
 ## 3. Ruby プログラムを追加・組み込む方法

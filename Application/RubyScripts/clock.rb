@@ -1,4 +1,4 @@
-Time.new(0, 0, 0)
+Time.new(9, 51, 0)
 
 print("clock_task\n")
 

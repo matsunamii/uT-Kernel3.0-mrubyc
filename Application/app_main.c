@@ -34,7 +34,7 @@ LOCAL void alarm_handler(void *exinf);
 /* Ruby Task Table */
 mruby_task_info_t mruby_tasks[] = {
   {
-    .script = sevenseg_led,
+    .script = led,
     .vm = NULL,
     .task_id = 0,
     .alarm_id = 0,
@@ -54,7 +54,7 @@ mruby_task_info_t mruby_tasks[] = {
     }
   },
   {
-      .script = stop_watch,
+      .script = print,
       .vm = NULL,
       .task_id = 0,
       .alarm_id = 0,
